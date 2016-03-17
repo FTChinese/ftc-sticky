@@ -19,7 +19,6 @@ function Sticky(fixedEl, startDistance, endDistance) {
 	function loop(){
 	    // Avoid calculations if not needed
 	    if (oSticky.lastPosition == window.scrollY) {
-	    	console.log(oSticky.lastPosition);
 	        rAF(loop);
 	        return false;
 	    } else {
