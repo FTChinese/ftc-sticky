@@ -1,37 +1,37 @@
 function Sticky(fixedEl, startDistance, endDistance) {
-	const oStikcy = this;
+	const oSticky = this;
 	var rAF = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame || function(callback){ window.setTimeout(callback, 1000/60) }
 
 
 	function init() {	
-		oStikcy.lastPosition = -1;
+		oSticky.lastPosition = -1;
 		if (!startDistance) {
 			startDistance = 0;
 		}
-		oStikcy.start = startDistance;
-		oStikcy.end = endDistance;
+		oSticky.start = startDistance;
+		oSticky.end = endDistance;
 		if (!(fixedEl instanceof HTMLElement)) {
 			fixedEl = document.querySelector(fixedEl);
 		}
-		oStikcy.fixedEl = fixedEl;
+		oSticky.fixedEl = fixedEl;
 	}
 
 	function loop(){
 	    // Avoid calculations if not needed
-	    if (oStikcy.lastPosition == window.scrollY) {
-	    	console.log(oStikcy.lastPosition);
+	    if (oSticky.lastPosition == window.scrollY) {
+	    	console.log(oSticky.lastPosition);
 	        rAF(loop);
 	        return false;
 	    } else {
-	    	oStikcy.lastPosition = window.scrollY;
+	    	oSticky.lastPosition = window.scrollY;
 	    }
 
-	    var withinRange = oStikcy.end ? ((oStikcy.lastPosition > oStikcy.start) && (oStikcy.lastPosition < oStikcy.end)) : (oStikcy.lastPosition > oStikcy.start);
+	    var withinRange = oSticky.end ? ((oSticky.lastPosition > oSticky.start) && (oSticky.lastPosition < oSticky.end)) : (oSticky.lastPosition > oSticky.start);
 
 	    if (withinRange) {
-	    	oStikcy.fixedEl.setAttribute('aria-sticked', 'true');
+	    	oSticky.fixedEl.setAttribute('aria-sticked', 'true');
 	    } else {
-	    	oStikcy.fixedEl.removeAttribute('aria-sticked', 'false');
+	    	oSticky.fixedEl.removeAttribute('aria-sticked', 'false');
 	    }
 
 	    rAF( loop );
