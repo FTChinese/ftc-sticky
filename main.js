@@ -29,9 +29,9 @@ function Sticky(fixedEl, startDistance, endDistance) {
 	    var withinRange = oStikcy.end ? ((oStikcy.lastPosition > oStikcy.start) && (oStikcy.lastPosition < oStikcy.end)) : (oStikcy.lastPosition > oStikcy.start);
 
 	    if (withinRange) {
-	    	oStikcy.fixedEl.classList.add('o-sticky--fixed');
+	    	oStikcy.fixedEl.setAttribute('aria-sticked', 'true');
 	    } else {
-	    	oStikcy.fixedEl.classList.remove('o-sticky--fixed');
+	    	oStikcy.fixedEl.removeAttribute('aria-sticked', 'false');
 	    }
 
 	    rAF( loop );
