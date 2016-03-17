@@ -1,0 +1,24 @@
+{
+  "name": "ftc-sticky",
+  "homepage": "https://github.com/FTChinese/ftc-sticky",
+  "authors": [
+    "weiguo.ni <neefrankie@gmail.com>"
+  ],
+  "description": "Stick element on page",
+  "main": ["main.js"],
+  "moduleType": [
+    "node"
+  ],
+  "scripts": {
+    "gulp": "./node_modules/gulp/bin/gulp.js"
+  },
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "demo"
+  ]
+}
