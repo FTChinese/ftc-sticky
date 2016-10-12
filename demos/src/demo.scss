@@ -1,0 +1,21 @@
+@import "o-colors/main";
+
+body {
+	margin: 0;
+	padding: 0;
+	@include oColorsFor(page);
+}
+.o-sticky {
+	height: 100vh;
+	background-color: oColorsGetPaletteColor('pink-tint2');
+}
+
+.demo-target {
+	height: 100px;
+	line-height: 100px;
+	background-color: oColorsGetPaletteColor('claret');
+	color: #fff;
+	text-align: center;
+	width: 50%;
+	margin: 0 auto;
+}

@@ -1,42 +1,146 @@
-function Sticky(fixedEl, startDistance, endDistance) {
-	const oSticky = this;
-	var rAF = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || window.oRequestAnimationFrame || function(callback){ window.setTimeout(callback, 1000/60) }
+/* eslint-disable no-console */
+const stickyRootSelector = '[data-ig-component~="ig-sticky"]';
+const stickyTargetSelector = '.ig-sticky-target';
 
+class Sticky {
+	/**
+	* Create a sticky instance
+	* param { String | HTMLElement } rootEl - The sticky element's container
+	* param { Object } config
+	* param { String | HTMLElement } config.target - The element to stick
+	* param { Number } config.start - Starting point relative to `rootEl`. Default 0.
+	*/
+	constructor(rootEl, config) {
+		const targetAttr = 'data-o-sticky-target';
 
-	function init() {	
-		oSticky.lastPosition = -1;
-		if (!startDistance) {
-			startDistance = 0;
+		if (!Sticky._stickies) {
+			Sticky._stickies = [];
 		}
-		oSticky.start = startDistance;
-		oSticky.end = endDistance;
-		if (!(fixedEl instanceof HTMLElement)) {
-			fixedEl = document.querySelector(fixedEl);
+
+		if (!rootEl) {
+			return;
+		} else if (!(rootEl instanceof HTMLElement)) {
+			rootEl = document.querySelector(rootEl);
 		}
-		oSticky.fixedEl = fixedEl;
+
+		if (rootEl.hasAttribute('data-o-sticky--js')) {
+			return;
+		}
+
+		if (!config) {
+			config = {};
+			config.target = rootEl.hasAttribute(targetAttr) ? rootEl.getAttribute(targetAttr) : null;
+		}
+		this.enabled = false;
+		
+		if (!config.targetEl) {
+			console.log('Abort. Sticky target does not exist: ' + this.rootEl);
+			return;
+		} else if (!(config.target instanceof HTMLElement)) {
+			config.target = rootEl.querySelector(config.target);
+		}
+
+		this.enabled = true;
+
+		this.targetEl = config.target;
+		this.rootEl = rootEl;
+	
+		const rootRect = rootEl.getBoundingClientRect();
+		
+// the difference between the height of rootEl and targetEl.
+		const stickyRange = rootEl.offsetHeight - targetEl.offsetHeight;
+
+		this.start = config.start ? config.start : 0;
+		if (typeof this.start === 'string') {
+			this.start = parseInt(this.start);
+		}
+
+		this.stickyRange = stickyRange;
+		this.state = '';
+		this.rootHeight = rootEl.offsetHeight;
+		this.targetHeight = targetEl.offsetHeight;
+
+		Sticky._stickies.push(this);
+
+		if (!Sticky._scollListener) {
+			window.addEventListener('scroll', function () {
+				console.log('scroll event added on window.');
+			});
+			
+			Sticky._scollListener = true;
+		}
+
+		this.setTargetElWidth();
+		this.updatePosition();
 	}
 
-	function loop(){
-	    // Avoid calculations if not needed
-	    if (oSticky.lastPosition == window.scrollY) {
-	        rAF(loop);
-	        return false;
-	    } else {
-	    	oSticky.lastPosition = window.scrollY;
-	    }
-
-	    var withinRange = oSticky.end ? ((oSticky.lastPosition > oSticky.start) && (oSticky.lastPosition < oSticky.end)) : (oSticky.lastPosition > oSticky.start);
-
-	    if (withinRange) {
-	    	oSticky.fixedEl.setAttribute('aria-sticked', 'true');
-	    } else {
-	    	oSticky.fixedEl.removeAttribute('aria-sticked', 'false');
-	    }
-
-	    rAF( loop );
+	setState(newState) {
+		if (this.state !== newState) {
+			this.state = newState;
+			this.targetEl.setAttribute('aria-sticky', newState);
+		}
 	}
-	init();
-	loop();
+
+
+	setTargetElWidth() {
+		this.targetEl.style.width = this.rootEl.offsetWidth + 'px';
+	}
+
+	updatePosition() {
+		const rectTop = this.rootEl.getBoundingClientRect().top;
+
+		if (rectTop > this.start) {
+			this.setState('top');
+			
+		} else if (rectTop <= this.start) {
+			const movedDistance = Math.abs(rectTop - this.start);
+
+			if (movedDistance < this.stickyRange) {
+				this.setState('fixed');
+			} else {
+				this.setState('bottom');
+			}
+		}
+	}
+
+	static init(el) {
+		const stickyInstances = [];
+		if (!el) {
+			el = document.body;
+		} else if (!(el instanceof HTMLElement)) {
+			el = document.querySelector(el);
+		}
+
+		const stickyElements = el.querySelectorAll(stickyRootSelector);
+		for (let i = 0; i < stickyElements.length; i++) {
+			stickyInstances.push(new Sticky(stickyElements[i]));
+		}
+
+		function handleScroll() {
+			for (let i = 0, len = stickyInstances.length; i < len; i++) {
+				if (stickyInstances[i].enabled) {
+					stickyInstances[i].updatePosition();
+				} else {
+					console.log('Sticky for ', stickyInstances[i], ' is not enabled.');
+				}
+			}
+		}
+
+		function handleResize() {
+			for (let i = 0, len = stickyInstances.length; i < len; i++) {
+				stickyInstances[i].setTargetElWidth();
+			}
+		}
+
+		window.addEventListener('scroll', handleScroll);
+		window.addEventListener('resize', handleResize);
+		window.addEventListener('unload', function() {
+			window.removeEventListener('scroll', handleScroll);
+			window.removeEventListener('resize', handleResize);
+		});
+
+		return stickyInstances;
+	}
 }
 
-module.exports = Sticky;
+export default Sticky;

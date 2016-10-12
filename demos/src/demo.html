@@ -1,27 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
-<h2>Toggle class demo</h2>
-<div class="toggle">
-	<button data-o-component="o-toggle" data-o-toggle-target=".toggle-target">Toggle</button>
-	<ul class="toggle-target">
-		<li>Item 1</li>
-		<li>Item 2</li>
-		<li>Item 3</li>
-		<li>Item 4</li>
-		<li>Item 5</li>
-	</ul>	
-</div>
-
-<h2>ToggleMenu class demo</h2>
-<div class="menu">
-	<button data-o-component="o-toggle" data-o-toggle-target=".menu-target">Menu</button>
-	<ul class="menu-target">
-		<li><a href="#item-1" class="menu-link">Item 1</a></li>
-		<li><a href="#item-2" class="menu-link">Item 2</a></li>
-		<li><a href="#item-3" class="menu-link">Item 3</a></li>
-		<li><a href="#item-4" class="menu-link">Item 4</a></li>
-		<li><a href="#item-5" class="menu-link">Item 5</a></li>
-	</ul>	
+<div data-o-component="o-sticky" class="o-sticky" data-o-sticky-target=".demo-target">
+	<div class="demo-target">Sticky Element</div>
 </div>
 
 <section>

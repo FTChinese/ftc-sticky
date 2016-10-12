@@ -5,7 +5,9 @@
     "weiguo.ni <neefrankie@gmail.com>"
   ],
   "description": "Stick element on page",
-  "main": ["main.js"],
+  "main": [
+    "main.js"
+  ],
   "moduleType": [
     "node"
   ],
@@ -20,5 +22,9 @@
     "test",
     "tests",
     "demos"
-  ]
+  ],
+  "devDependencies": {
+    "o-colors": "^3.5.2",
+    "ftc-logos": "^0.3.0"
+  }
 }
