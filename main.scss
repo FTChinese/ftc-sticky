@@ -1,0 +1,26 @@
+$o-sticky-is-silent: true !default;
+
+@mixin oStickyBase ($offset: 0, $bounded: true) {
+	&[aria-sticky="top"] {
+		position: absolute;
+	}
+
+	&[aria-sticky="fixed"] {
+		position: fixed;
+        top: $offset + 0px;
+        bottom: auto;
+	}
+
+	&[aria-sticky="bottom"] {
+		@if $bounded == true {
+			position: absolute;
+		    top: auto;
+		    bottom: 0;			
+		}
+		@if $bounded == false {
+			position: fixed;
+	  		top: $offset + 0px;
+	  		bottom: auto;
+		}
+	}
+}
