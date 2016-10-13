@@ -5,7 +5,7 @@ class Sticky {
 	* param { String | HTMLElement } rootEl - The sticky element's container
 	* param { Object } config
 	* param { String | HTMLElement } config.target - The element to stick
-	* param { Number } config.start - Starting point in the viewport. Default 0.
+	* param { Number } config.offset - Starting point in the viewport. Default 0.
 	*/
 	constructor(rootEl, config) {
 		const targetAttr = 'data-o-sticky-target';
@@ -42,9 +42,9 @@ class Sticky {
 		this.rootEl = rootEl;
 		this.targetEl = config.target;
 	
-		this.start = config.start ? config.start : 0;
-		if (typeof this.start === 'string') {
-			this.start = parseInt(this.start);
+		this.offset = config.offset ? config.offset : 0;
+		if (typeof this.offset === 'string') {
+			this.offset = parseInt(this.offset);
 		}		
 		
 // the difference between the height of rootEl and targetEl.
@@ -79,13 +79,13 @@ class Sticky {
 		this.updatePosition();
 	}
 /*
- * @return {Number} - The vector distance from rootEl top to this.start.
+ * @return {Number} - The vector distance from rootEl top to this.offset.
  */
 	getDisplacement() {
 // `getBoundingClientRect()` returns top, left, right, bottom coordinates which are relative to viewport.
 // When you scrolled, their value changes.
-// this.start does not change, therefore caculation is possible.		
-		return this.rootEl.getBoundingClientRect().top - this.start
+// this.offset does not change, therefore caculation is possible.		
+		return this.rootEl.getBoundingClientRect().top - this.offset
 	}
 /**
  * @param { String } newState - `top`, `fixed` or `bottom`
