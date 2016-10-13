@@ -21,8 +21,8 @@ class Sticky {
 			rootEl = document.querySelector(rootEl);
 		}
 
-		if (rootEl.hasAttribute('data-o-sticky--js')) {
-			return;
+		if (!rootEl || rootEl.hasAttribute('data-o-sticky--js')) {
+			return ;
 		}
 
 		if (!config) {

@@ -1,5 +1,9 @@
 $o-sticky-is-silent: true !default;
 
+/**
+  * @param {Number} $offset - Sticky start point. Same as JS constructor's config.start.
+  * @param {Boolean} $bounded - Whether sticky takes effect only in the parent container. For elements like navigation, use `false`.
+  */
 @mixin oStickyBase ($offset: 0, $bounded: true) {
 	&[aria-sticky="top"] {
 		position: absolute;
