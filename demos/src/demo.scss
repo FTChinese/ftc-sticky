@@ -1,21 +1,80 @@
 @import "o-colors/main";
+@import "o-grid/main";
+@import "../../main";
+
+$o-nav-height: 50px;
 
 body {
 	margin: 0;
 	padding: 0;
 	@include oColorsFor(page);
 }
-.o-sticky {
-	height: 100vh;
-	background-color: oColorsGetPaletteColor('pink-tint2');
+
+header {
+	padding: 10px 0;
+	text-align: center;
+	height: 60px;
+	img {
+		height: 100%;
+	}
 }
 
-.demo-target {
-	height: 100px;
-	line-height: 100px;
-	background-color: oColorsGetPaletteColor('claret');
-	color: #fff;
-	text-align: center;
-	width: 50%;
-	margin: 0 auto;
+.o-grid-container {
+	@include oGridContainer;
+}
+
+.o-grid-row {
+	@include oGridRow;
+}
+
+.primary-column,
+.secondary-column {
+	@include oGridColspan((default: 12, M: 6));
+}
+
+.top-banner {
+	&__inner {
+		text-align: center;
+		background-color: orange;
+		height: 100px;
+		margin: 1em auto;	
+	}
+}
+.o-nav {
+	display: block;
+	position: relative;
+	height: $o-nav-height;
+
+	.demo-target {
+		text-align: center;
+		z-index: 103!important;
+		background-color: #fff1e0;
+	    color: #505050;
+	    box-shadow: 0 1px 3px rgba(80,80,80,.2),0 6px 10px rgba(80,80,80,.15);
+	    height: $o-nav-height;
+		
+		@include oStickyBase($bounded: false);
+	}    
+}
+
+.secondary-column {
+	position: relative;
+
+	&__inner {
+		height: 100%;
+		background-color: oColorsGetPaletteColor('pink-tint2');
+	}
+
+	.demo-target {
+		text-align: center;
+		background-color: oColorsGetPaletteColor('claret');
+		color: #fff;
+		height: 200px;
+		
+		@include oStickyBase($o-nav-height);
+	}
+}
+
+.placeholder {
+	height: 100vh;
 }
