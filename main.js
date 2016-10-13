@@ -5,7 +5,7 @@ class Sticky {
 	* param { String | HTMLElement } rootEl - The sticky element's container
 	* param { Object } config
 	* param { String | HTMLElement } config.target - The element to stick
-	* param { Number } config.start - Starting point relative to `rootEl`. Default 0.
+	* param { Number } config.start - Starting point in the viewport. Default 0.
 	*/
 	constructor(rootEl, config) {
 		const targetAttr = 'data-o-sticky-target';
@@ -20,15 +20,15 @@ class Sticky {
 		} else if (!(rootEl instanceof HTMLElement)) {
 			rootEl = document.querySelector(rootEl);
 		}
-
-		if (!rootEl || rootEl.hasAttribute('data-o-sticky--js')) {
+// If rootEl still doest not exist:
+		if (!rootEl) {
 			return ;
 		}
 
 		if (!config) {
 			config = {};
 		}
-
+// Find the targetEl. If failed, constructor should fail.
 		config.target = config.target ? config.target : rootEl.getAttribute(targetAttr);
 		
 		if (!config.target) {
@@ -37,22 +37,24 @@ class Sticky {
 		} else if (!(config.target instanceof HTMLElement)) {
 			config.target = rootEl.querySelector(config.target);
 		}
-
+// Flag to prevent inadvertently changeing data in scroll event.
 		this.initialized = true;
 		this.rootEl = rootEl;
 		this.targetEl = config.target;
-// `this.start` is relative to viewport - Sticky should certainly takes effect in the visible area.	
+	
 		this.start = config.start ? config.start : 0;
 		if (typeof this.start === 'string') {
 			this.start = parseInt(this.start);
 		}		
-	
-		const rootRect = rootEl.getBoundingClientRect();
 		
 // the difference between the height of rootEl and targetEl.
-		const stickyRange = this.rootEl.offsetHeight - this.targetEl.offsetHeight;
+		this.stickyRange = this.rootEl.offsetHeight - this.targetEl.offsetHeight;
 
-		this.stickyRange = stickyRange;
+// When positive, it means the rootEl is below starting point. At this point this.state == 'top';
+// When negative, it means the rootEl is above the starting point.
+// -stickyRange < this.displacement < 0: this.state = 'fixed';
+// -stickyRange > this.displacement: this.state = 'bottom'.
+		this.displacement = this.getDisplacement();
 		this.state = '';
 
 		Sticky._stickies.push(this);
@@ -76,6 +78,15 @@ class Sticky {
 		this.setTargetElWidth();
 		this.updatePosition();
 	}
+/*
+ * @return {Number} - The vector distance from rootEl top to this.start.
+ */
+	getDisplacement() {
+// `getBoundingClientRect()` returns top, left, right, bottom coordinates which are relative to viewport.
+// When you scrolled, their value changes.
+// this.start does not change, therefore caculation is possible.		
+		return this.rootEl.getBoundingClientRect().top - this.start
+	}
 /**
  * @param { String } newState - `top`, `fixed` or `bottom`
  */
@@ -91,29 +102,26 @@ class Sticky {
 	}
 
 	updatePosition() {
-// `getBoundingClientRect()` returns top, left, right, bottom coordinates which are relative to viewport.
-// When you scrolled, their value changes.
-		const rectTop = this.rootEl.getBoundingClientRect().top;
-// When rectTop > this.start, Sticky should not start.
-		if (rectTop > this.start) {
+		this.displacement = this.getDisplacement();
+		if (this.displacement > 0) {
 			this.setState('top');
-// Sticky starts			
-		} else if (rectTop <= this.start) {
-// @{ Number } movedDistance - The distance from `rectTop` to `this.start`
-			const movedDistance = Math.abs(rectTop - this.start);
-// If movedDistance is within the stickyRange, it should be fixed.
-			if (movedDistance < this.stickyRange) {
-				this.setState('fixed');
-			} else {
-				this.setState('bottom');
-			}
+		} else if (this.displacement < -this.stickyRange) {
+			this.setState('bottom');
+		} else {
+			this.setState('fixed');
 		}
 	}
 
 	static _winScroll() {
+		var updateEvent = new CustomEvent('updatePosition', {
+			detail: 'Update Position on Scroll'
+		});
+
 		Sticky._stickies.forEach(function(sticky) {
 			if (sticky.initialized) {
 				sticky.updatePosition();
+				// Dispatch custom event so that related actions could be performed.
+				sticky.targetEl.dispatchEvent(updateEvent);
 			} else {
 				console.log(sticky, ' is not initialized.');
 			}
