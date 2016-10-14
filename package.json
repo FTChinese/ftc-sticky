@@ -1,6 +1,6 @@
 {
   "name": "ftc-sticky",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Stick element on a page with requestAnimationFrame",
   "main": "main.js",
   "scripts": {
