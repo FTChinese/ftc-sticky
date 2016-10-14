@@ -47,13 +47,8 @@ class Sticky {
 // the difference between the height of rootEl and targetEl.
 		this.stickyRange = this.getRange();
 
-		console.log('root height', this.rootEl.offsetHeight);
-		console.log('target height', this.targetEl.offsetHeight);
-		console.log('range', this.stickyRange);
-
 		this.displacement = this.getDisplacement();
 		this.state = '';
-
 
 		this.setTargetElWidth();
 		this.updatePosition();
