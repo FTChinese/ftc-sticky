@@ -1,11 +1,10 @@
-import Sticky from '../../main.js';
-import Scrollmation from './scrollmation';
+import Sticky, {Scrollmation} from '../../main.js';
 
 const stickyNav = new Sticky('.o-nav');
-
 console.log(stickyNav);
 
-const scrollmation = new Scrollmation('.secondary-column__inner', {
-	start: 50
+const scrollmation = Scrollmation.init(null, {
+	offset: 50
 });
+
 console.log(scrollmation);

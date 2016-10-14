@@ -29,8 +29,16 @@ body {
 	padding: 0;
 	@include oColorsFor(page);
 }
+
 h3 {
 	margin: 0;
+	padding: 10px 0;
+}
+figure {
+	margin: 0;
+	padding: 0;
+}
+figcaption {
 	padding: 10px 0;
 }
 header {
@@ -42,6 +50,10 @@ header {
 	}
 }
 
+.separator {
+	background-color: olive;
+	height: 100px;
+}
 .o-grid-container {
 	@include oGridContainer;
 }
@@ -98,6 +110,10 @@ header {
 		background-color: oColorsGetPaletteColor('claret');
 		color: #fff;
 		// height: 200px;
+
+		#section-2 & {
+			background-color: oColorsGetPaletteColor('teal-1');
+		}
 		
 		@include oStickyBase($o-nav-height);
 	}

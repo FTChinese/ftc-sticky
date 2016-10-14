@@ -53,7 +53,7 @@ gulp.task('html', () => {
       embedded = true;
     }
 
-    const origami = yield helper.readJson('origami.json');
+    const [origami, data] = yield Promise.all(['origami.json', 'demos/src/data.json'].map(helper.readJson));
 
     const demos = origami.demos;
 
@@ -65,6 +65,7 @@ gulp.task('html', () => {
       const context = {
         pageTitle: demo.name,
         description: demo.description,
+        sections: data,
         embedded: embedded
       };
 
