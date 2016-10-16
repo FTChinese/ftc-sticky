@@ -28,3 +28,17 @@ $o-sticky-is-silent: true !default;
 		}
 	}
 }
+
+@mixin oStickyContainer ($target-height: null, $offset: 0, $bounded: true, $classname: 'o-sticky') {
+	.#{$classname} {
+		position: relative;
+	}
+
+	.#{$classname}__target {
+		position: absolute;
+		@if $target-height != null {
+			height: $target-height;
+		}
+		@include oStickyBase($offset, $bounded)
+	}
+}
