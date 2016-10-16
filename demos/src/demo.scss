@@ -115,8 +115,9 @@ header {
 			background-color: oColorsGetPaletteColor('teal-1');
 		}
 		
-		@include oStickyBase($o-nav-height);
+		// @include oStickyBase($o-nav-height);
 	}
+	@include oStickyContainer($offset: $o-nav-height);
 }
 
 .placeholder {
